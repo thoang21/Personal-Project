@@ -15,15 +15,17 @@ my_servo = servo.ContinuousServo(pwm)
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bno055.BNO055(i2c)
 
+# Variable
+setpoint = 0
+tolerance = 10
+
 while True:
-    if sensor.euler[3] > 0:
+    if sensor.euler[2] > setpoint + tolerance:
         print("forward")
         my_servo.throttle = 1.0
-    if sensor.euler[3] < 0:
+    elif sensor.euler[2] < setpoint - tolerance:
         print("reverse")
         my_servo.throttle = -1.0
-        time.sleep(2.0)
     else:
         print("stop")
         my_servo.throttle = 0.0
-        time.sleep(4.0)
